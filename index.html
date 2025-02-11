@@ -102,10 +102,12 @@
                 <option value="UAE">阿联酋</option>
                 <option value="UK">英国</option>
                 <option value="KR">韩国</option>
+                <option value="US">美国</option>
             </select>
         </div>
         <h1>【摸鱼办】温馨提醒</h1>
         <div class="current-time" id="currentTime"></div>
+        <div class="currentCountry-time" id="currentCountryTime"></div>
         <div id="mainContent"></div>
         <button class="copy-button" onclick="copyContent()">一键复制摸鱼提醒</button>
         <div id="copyFeedback" class="copy-feedback">复制成功！</div>
@@ -146,6 +148,20 @@
                 { name: "현충일", month: 6, day: 6, description: "현충일" },
                 { name: "광복절", month: 8, day: 15, description: "광복절" },
                 { name: "추석", month: 9, day: 30, description: "음력 추석" }
+            ],
+            US: [
+                {name: "New Year's Day", month: 1, day: 1, description: "Federal Holiday"},
+                {name: "Martin Luther King Jr. Day", month: 1, day: 20, description: "Federal Holiday"},
+                {name: "Washington's Birthday", month: 2, day: 17, description: "Federal Holiday"},
+                {name: "Memorial Day", month: 5, day: 26, description: "Federal Holiday"},
+                {name: "Juneteenth National Independence Day", month: 6, day: 19, description: "Federal Holiday"},
+                {name: "Independence Day", month: 7, day: 4, description: "Federal Holiday"},
+                {name: "Labor Day", month: 9, day: 1, description: "Federal Holiday"},
+                {name: "Columbus Day", month: 10, day: 13, description: "Federal Holiday"},
+                {name: "Veterans Day", month: 11, day: 11, description: "Federal Holiday"},
+                {name: "Thanksgiving Day", month: 11, day: 27, description: "Federal Holiday"},
+                {name: "Christmas Day", month: 12, day: 25, description: "Federal Holiday"}
+
             ]
         };
 
@@ -156,7 +172,15 @@
         function updateCurrentTime() {
             const now = new Date();
             const timeString = `${padZero(now.getHours())}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())}`;
-            document.getElementById('currentTime').textContent = `当前时间：${timeString}`;
+
+            // Get the local timezone offset in minutes
+            const timezoneOffset = now.getTimezoneOffset();
+
+            // Convert the offset to hours and format it
+            const timezoneOffsetHours = -timezoneOffset / 60;
+            const timezoneOffsetString = `UTC${timezoneOffsetHours >= 0 ? '+' : ''}${timezoneOffsetHours}`;
+
+            document.getElementById('currentTime').textContent = `当前本地时间：${timeString} (${timezoneOffsetString})`;
         }
 
         function getCountryName(code) {
@@ -164,7 +188,8 @@
                 CN: "中国",
                 UAE: "阿联酋",
                 UK: "英国",
-                KR: "韩国"
+                KR: "韩国",
+                US: "美国"
             };
             return names[code] || code;
         }
@@ -203,6 +228,7 @@
             const hoursPassed = now.getHours();
             const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
             const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
+            const country = document.getElementById('countrySelect').value; // Get the selected country
 
             function getDaysToDate(day) {
                 let targetDate = new Date(now);
@@ -213,8 +239,30 @@
                 return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
             }
 
+            // Function to get the timezone for a specific country
+            function getTimezoneForCountry(countryCode) {
+                const timezones = {
+                    CN: 'Asia/Shanghai',    // 中国
+                    UAE: 'Asia/Dubai',       // 阿联酋
+                    UK: 'Europe/London',     // 英国
+                    KR: 'Asia/Seoul',        // 韩国
+                    US: 'America/New_York'  // 美国 (Example: New York)
+                };
+                return timezones[countryCode] || 'UTC'; // Default to UTC if not found
+            }
+
+            // Get the timezone for the selected country
+            const countryTimezone = getTimezoneForCountry(country);
+
+            // Get the current time in the selected country's timezone
+            const countryTime = new Date().toLocaleString('en-US', { timeZone: countryTimezone });
+
             const content = `
-                <div class="section">
+                <div class="section" style="text-align: center;">
+                    <p>当前所选国家时间：${countryTime} (${countryTimezone})</p>
+                </div>
+
+                <div class="section" style="text-align: center;">
                     ${now.getFullYear()}年已经过去 ${daysPassed} 天 ${hoursPassed} 小时，
                     今天是 ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日，星期${weekdays[now.getDay()]}
                 </div>
@@ -232,12 +280,15 @@
                     <p>距离【10号发工资】：${getDaysToDate(10)} 天</p>
                     <p>距离【15号发工资】：${getDaysToDate(15)} 天</p>
                     <p>距离【20号发工资】：${getDaysToDate(20)} 天</p>
+                    <p>距离【25号发工资】：${getDaysToDate(25)} 天</p>
                     <p>距离【周六】还有 ${daysToSaturday} 天</p>
                 </div>
 
                 <div class="section">
                     ${getHolidaySection()}
                 </div>
+
+                
             `;
 
             document.getElementById('mainContent').innerHTML = content;
@@ -276,6 +327,7 @@ ${now.getFullYear()}年已经过去${daysPassed}天${hoursPassed}小时
 距离【10号发工资】：${getDaysToDate(10)}天
 距离【15号发工资】：${getDaysToDate(15)}天
 距离【20号发工资】：${getDaysToDate(20)}天
+距离【25号发工资】：${getDaysToDate(25)}天
 距离【周六】还有${daysToSaturday}天
 
 【${getCountryName(country)}节假日】\n`;
