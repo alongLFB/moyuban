@@ -104,6 +104,10 @@
                 <option value="KR">韩国</option>
                 <option value="US">美国</option>
             </select>
+            <select id="languageSelect" class="country-select" onchange="updateContent()">
+                <option value="zh-CN">中文</option>
+                <option value="en-US">English</option>
+            </select>
         </div>
         <h1>【摸鱼办】温馨提醒</h1>
         <div class="current-time" id="currentTime"></div>
@@ -123,12 +127,12 @@
                 { name: "国庆节、中秋节", month: 10, day: 1, description: "10月1日（周三）至8日（周三）放假调休，共8天。9月28日（周日）、10月11日（周六）上班" }
             ],
             UAE: [
-                { name: "开斋节", month: 2, day: 29, description: "2025年3月29日（周六）-4月1日（周二），共4天。开斋节标志着斋月的结束" }, 
-                { name: "阿拉法特日", month: 6, day: 5, description: "2025年6月5日（周四），朝觐活动的重要日期" }, 
-                { name: "宰牲节", month: 6, day: 6, description: "2025年6月6日（周五）-8日（周日），共3天。伊斯兰教最重要的节日之一" }, 
-                { name: "伊斯兰新年", month: 6, day: 26, description: "2025年6月26日（周四），伊斯兰新年" }, 
-                { name: "先知诞辰", month: 9, day: 4, description: "2025年9月4日（周四），纪念先知穆罕默德诞辰" }, 
-                { name: "烈士日", month: 12, day: 1, description: "2025年12月1日（周一），纪念为国捐躯的阿联酋烈士" }, 
+                { name: "开斋节", month: 2, day: 29, description: "2025年3月29日（周六）-4月1日（周二），共4天。开斋节标志着斋月的结束" },
+                { name: "阿拉法特日", month: 6, day: 5, description: "2025年6月5日（周四），朝觐活动的重要日期" },
+                { name: "宰牲节", month: 6, day: 6, description: "2025年6月6日（周五）-8日（周日），共3天。伊斯兰教最重要的节日之一" },
+                { name: "伊斯兰新年", month: 6, day: 26, description: "2025年6月26日（周四），伊斯兰新年" },
+                { name: "先知诞辰", month: 9, day: 4, description: "2025年9月4日（周四），纪念先知穆罕默德诞辰" },
+                { name: "烈士日", month: 12, day: 1, description: "2025年12月1日（周一），纪念为国捐躯的阿联酋烈士" },
                 { name: "国庆节", month: 12, day: 2, description: "2025年12月2日（周二）-3日（周三），共2天。庆祝阿联酋建国54周年" }
             ],
             UK: [
@@ -142,7 +146,7 @@
             ],
             KR: [
                 { name: "삼일절", month: 3, day: 1, description: "3.1절" },
-                { name: "삼일절", month: 3, day: 3, description: "3·1 운동/삼일절 휴일"},
+                { name: "삼일절", month: 3, day: 3, description: "3·1 운동/삼일절 휴일" },
                 { name: "어린이날", month: 5, day: 5, description: "어린이날" },
                 { name: "부처님오신날", month: 5, day: 6, description: "부처님오신날" },
                 { name: "현충일", month: 6, day: 6, description: "현충일" },
@@ -150,17 +154,17 @@
                 { name: "추석", month: 9, day: 30, description: "음력 추석" }
             ],
             US: [
-                {name: "New Year's Day", month: 1, day: 1, description: "Federal Holiday"},
-                {name: "Martin Luther King Jr. Day", month: 1, day: 20, description: "Federal Holiday"},
-                {name: "Washington's Birthday", month: 2, day: 17, description: "Federal Holiday"},
-                {name: "Memorial Day", month: 5, day: 26, description: "Federal Holiday"},
-                {name: "Juneteenth National Independence Day", month: 6, day: 19, description: "Federal Holiday"},
-                {name: "Independence Day", month: 7, day: 4, description: "Federal Holiday"},
-                {name: "Labor Day", month: 9, day: 1, description: "Federal Holiday"},
-                {name: "Columbus Day", month: 10, day: 13, description: "Federal Holiday"},
-                {name: "Veterans Day", month: 11, day: 11, description: "Federal Holiday"},
-                {name: "Thanksgiving Day", month: 11, day: 27, description: "Federal Holiday"},
-                {name: "Christmas Day", month: 12, day: 25, description: "Federal Holiday"}
+                { name: "New Year's Day", month: 1, day: 1, description: "Federal Holiday" },
+                { name: "Martin Luther King Jr. Day", month: 1, day: 20, description: "Federal Holiday" },
+                { name: "Washington's Birthday", month: 2, day: 17, description: "Federal Holiday" },
+                { name: "Memorial Day", month: 5, day: 26, description: "Federal Holiday" },
+                { name: "Juneteenth National Independence Day", month: 6, day: 19, description: "Federal Holiday" },
+                { name: "Independence Day", month: 7, day: 4, description: "Federal Holiday" },
+                { name: "Labor Day", month: 9, day: 1, description: "Federal Holiday" },
+                { name: "Columbus Day", month: 10, day: 13, description: "Federal Holiday" },
+                { name: "Veterans Day", month: 11, day: 11, description: "Federal Holiday" },
+                { name: "Thanksgiving Day", month: 11, day: 27, description: "Federal Holiday" },
+                { name: "Christmas Day", month: 12, day: 25, description: "Federal Holiday" }
 
             ]
         };
@@ -229,6 +233,7 @@
             const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
             const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
             const country = document.getElementById('countrySelect').value; // Get the selected country
+            const language = document.getElementById('languageSelect').value; // Get the selected language
 
             function getDaysToDate(day) {
                 let targetDate = new Date(now);
@@ -257,38 +262,64 @@
             // Get the current time in the selected country's timezone
             const countryTime = new Date().toLocaleString('en-US', { timeZone: countryTimezone });
 
+            // Define language-specific content
+            const translations = {
+                'zh-CN': {
+                    timeInCountry: `当前所选国家时间：${countryTime} (${countryTimezone})`,
+                    yearPassed: `${now.getFullYear()}年已经过去 ${daysPassed} 天 ${hoursPassed} 小时，`,
+                    todayIs: `今天是 ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日，星期${weekdays[now.getDay()]}`,
+                    greeting: '你好，摸鱼人！工作再忙，一定不要忘记摸鱼哦！',
+                    workReminder: '有事没事起身去茶水间，去厕所，去走廊走走，去找同事聊聊八卦\n别老在工位上坐着，钱是老板的但命是自己的。',
+                    salary: '【工资】',
+                    daysToPayday: '距离【月底发工资】：',
+                    daysToSaturday: `距离【周六】还有 ${daysToSaturday} 天`,
+                    holidays: `【${getCountryName(country)}节假日】`
+                },
+                'en-US': {
+                    timeInCountry: `Current time in selected country: ${countryTime} (${countryTimezone})`,
+                    yearPassed: `${now.getFullYear()} has passed ${daysPassed} days and ${hoursPassed} hours.`,
+                    todayIs: `Today is ${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}, Weekday ${weekdays[now.getDay()]}`,
+                    greeting: 'Hello, fish-toucher! No matter how busy you are, don\'t forget to touch fish!',
+                    workReminder: 'Take a break and walk around the pantry, restroom, or hallway. Chat with colleagues about gossip.\nDon\'t just sit at your desk all the time. The money belongs to the boss, but your life is your own.',
+                    salary: '【Salary】',
+                    daysToPayday: 'Days to [End of month payday]:',
+                    daysToSaturday: `Days to [Saturday]: ${daysToSaturday}`,
+                    holidays: `【${getCountryName(country)} Holidays】`
+                }
+            };
+
+            const langData = translations[language];
+
             const content = `
                 <div class="section" style="text-align: center;">
-                    <p>当前所选国家时间：${countryTime} (${countryTimezone})</p>
+                    <p>${langData.timeInCountry}</p>
                 </div>
 
                 <div class="section" style="text-align: center;">
-                    ${now.getFullYear()}年已经过去 ${daysPassed} 天 ${hoursPassed} 小时，
-                    今天是 ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日，星期${weekdays[now.getDay()]}
+                    ${langData.yearPassed}
+                    ${langData.todayIs}
                 </div>
                 
                 <div class="section">
-                    你好，摸鱼人！工作再忙，一定不要忘记摸鱼哦！
-                    有事没事起身去茶水间，去厕所，去走廊走走，去找同事聊聊八卦
-                    别老在工位上坐着，钱是老板的但命是自己的。
+                    ${langData.greeting}
+                    ${langData.workReminder}
                 </div>
 
                 <div class="section" style="text-align: center;">
-                    <h3 style="text-align: center;">【工资】</h3>
-                    <p>距离【月底发工资】：${getDaysToDate(30)} 天</p>
+                    <h3 style="text-align: center;">${langData.salary}</h3>
+                    <p>${langData.daysToPayday}：${getDaysToDate(30)} 天</p>
                     <p>距离【05号发工资】：${getDaysToDate(5)} 天</p>
                     <p>距离【10号发工资】：${getDaysToDate(10)} 天</p>
                     <p>距离【15号发工资】：${getDaysToDate(15)} 天</p>
                     <p>距离【20号发工资】：${getDaysToDate(20)} 天</p>
                     <p>距离【25号发工资】：${getDaysToDate(25)} 天</p>
-                    <p>距离【周六】还有 ${daysToSaturday} 天</p>
+                    <p>${langData.daysToSaturday}</p>
                 </div>
 
                 <div class="section">
+                    <h3 style="text-align: center;">${langData.holidays}</h3>
                     ${getHolidaySection()}
                 </div>
-
-                
             `;
 
             document.getElementById('mainContent').innerHTML = content;
