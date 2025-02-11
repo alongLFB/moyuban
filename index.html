@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>摸鱼办公室</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .section {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .current-time {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+        }
+
+        .copy-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #2ecc71;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .copy-button:hover {
+            background-color: #27ae60;
+        }
+
+        .copy-button:active {
+            transform: scale(0.98);
+        }
+
+        .copy-feedback {
+            display: none;
+            text-align: center;
+            color: #27ae60;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>【摸鱼办】温馨提醒</h1>
+        <div class="current-time" id="currentTime"></div>
+        <div id="mainContent"></div>
+        <button class="copy-button" onclick="copyContent()">一键复制摸鱼提醒</button>
+        <div id="copyFeedback" class="copy-feedback">复制成功！</div>
+    </div>
+
+    <script>
+        function padZero(num) {
+            return num < 10 ? '0' + num : num;
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = `${padZero(now.getHours())}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())}`;
+            document.getElementById('currentTime').textContent = `当前时间：${timeString}`;
+        }
+
+        function getTextContent() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const daysPassed = Math.floor((now - startOfYear) / (24 * 60 * 60 * 1000));
+            const hoursPassed = now.getHours();
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+
+            function getDaysToDate(day) {
+                let targetDate = new Date(now);
+                targetDate.setDate(day);
+                if (now.getDate() > day) {
+                    targetDate.setMonth(targetDate.getMonth() + 1);
+                }
+                return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
+            }
+
+            function getDaysToHoliday(month, day) {
+                let targetDate = new Date(now.getFullYear(), month - 1, day);
+                if (targetDate < now) {
+                    targetDate.setFullYear(targetDate.getFullYear() + 1);
+                }
+                const diff = targetDate - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                return { days, hours };
+            }
+
+            const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
+
+            return `【摸鱼办】提醒您:
+${now.getFullYear()}年已经过去${daysPassed}天${hoursPassed}小时
+今天是${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日，星期${weekdays[now.getDay()]}
+当前时间：${padZero(now.getHours())}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())}
+
+你好，摸鱼人！工作再忙，一定不要忘记摸鱼哦！
+有事没事起身去茶水间，去厕所，去走廊走走，去找同事聊聊八卦
+别老在工位上坐着，钱是老板的但命是自己的。
+
+【工资】
+距离【月底发工资】：${getDaysToDate(30)}天
+距离【05号发工资】：${getDaysToDate(5)}天
+距离【10号发工资】：${getDaysToDate(10)}天
+距离【15号发工资】：${getDaysToDate(15)}天
+距离【20号发工资】：${getDaysToDate(20)}天
+距离【周六】还有${daysToSaturday}天
+
+【节假日】
+距离【清明】还有${getDaysToHoliday(4, 4).days}天${getDaysToHoliday(4, 4).hours}小时。4月4日（周五）至6日（周日）放假，共3天。
+距离【五一】还有${getDaysToHoliday(5, 1).days}天${getDaysToHoliday(5, 1).hours}小时。5月1日（周四）至5日（周一）放假调休，共5天。4月27日（周日）上班。
+距离【端午】还有${getDaysToHoliday(5, 31).days}天${getDaysToHoliday(5, 31).hours}小时。5月31日（周六）至6月2日（周一）放假，共3天。
+距离【国庆节、中秋节】还有${getDaysToHoliday(10, 1).days}天${getDaysToHoliday(10, 1).hours}小时。10月1日（周三）至8日（周三）放假调休，共8天。9月28日（周日）、10月11日（周六）上班。`;
+        }
+
+        async function copyContent() {
+            const textContent = getTextContent();
+            try {
+                await navigator.clipboard.writeText(textContent);
+                const feedback = document.getElementById('copyFeedback');
+                feedback.style.display = 'block';
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 2000);
+            } catch (err) {
+                alert('复制失败，请重试');
+            }
+        }
+
+        function updateContent() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const daysPassed = Math.floor((now - startOfYear) / (24 * 60 * 60 * 1000));
+            const hoursPassed = now.getHours();
+
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+
+            function getDaysToDate(day) {
+                let targetDate = new Date(now);
+                targetDate.setDate(day);
+                if (now.getDate() > day) {
+                    targetDate.setMonth(targetDate.getMonth() + 1);
+                }
+                return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
+            }
+
+            function getDaysToHoliday(month, day) {
+                let targetDate = new Date(now.getFullYear(), month - 1, day);
+                if (targetDate < now) {
+                    targetDate.setFullYear(targetDate.getFullYear() + 1);
+                }
+                const diff = targetDate - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                return { days, hours };
+            }
+
+            const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
+
+            const content = `
+                <div class="section">
+                    ${now.getFullYear()}年已经过去 ${daysPassed} 天 ${hoursPassed} 小时，
+                    今天是 ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日，星期${weekdays[now.getDay()]}
+                </div>
+                
+                <div class="section">
+                    你好，摸鱼人！工作再忙，一定不要忘记摸鱼哦！
+                    有事没事起身去茶水间，去厕所，去走廊走走，去找同事聊聊八卦
+                    别老在工位上坐着，钱是老板的但命是自己的。
+                </div>
+
+                <div class="section">
+                    <h3>【工资】</h3>
+                    <p>距离【月底发工资】：${getDaysToDate(30)} 天</p>
+                    <p>距离【05号发工资】：${getDaysToDate(5)} 天</p>
+                    <p>距离【10号发工资】：${getDaysToDate(10)} 天</p>
+                    <p>距离【15号发工资】：${getDaysToDate(15)} 天</p>
+                    <p>距离【20号发工资】：${getDaysToDate(20)} 天</p>
+                    <p>距离【周六】还有 ${daysToSaturday} 天</p>
+                </div>
+
+                <div class="section">
+                    <h3>【节假日】</h3>
+                    <p>距离【清明】还有 ${getDaysToHoliday(4, 4).days} 天 ${getDaysToHoliday(4, 4).hours} 小时。4月4日（周五）至6日（周日）放假，共3天。</p>
+                    <p>距离【五一】还有 ${getDaysToHoliday(5, 1).days} 天 ${getDaysToHoliday(5, 1).hours} 小时。5月1日（周四）至5日（周一）放假调休，共5天。4月27日（周日）上班。</p>
+                    <p>距离【端午】还有 ${getDaysToHoliday(5, 31).days} 天 ${getDaysToHoliday(5, 31).hours} 小时。5月31日（周六）至6月2日（周一）放假，共3天。</p>
+                    <p>距离【国庆节、中秋节】还有 ${getDaysToHoliday(10, 1).days} 天 ${getDaysToHoliday(10, 1).hours} 小时。10月1日（周三）至8日（周三）放假调休，共8天。9月28日（周日）、10月11日（周六）上班。</p>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = content;
+        }
+
+        // 初始更新
+        updateContent();
+        updateCurrentTime();
+
+        // 时间更新：每秒更新时分秒
+        setInterval(updateCurrentTime, 1000);
+
+        // 内容更新：每分钟更新一次
+        setInterval(updateContent, 60000);
+    </script>
+</body>
+
+</html>
