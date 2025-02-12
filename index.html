@@ -1,370 +1,576 @@
 <!DOCTYPE html>
 <html lang="zh">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>摸鱼办公室</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
 
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
+      .container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
 
-        .country-selector {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-        }
+      .country-selector {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+      }
 
-        .country-select {
-            padding: 8px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            background-color: white;
-            cursor: pointer;
-        }
+      .country-select {
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        background-color: white;
+        cursor: pointer;
+      }
 
-        .language-selector {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-        }
+      .language-selector {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+      }
 
-        .language-select {
-            padding: 8px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            background-color: white;
-            cursor: pointer;
-        }
+      .language-select {
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        background-color: white;
+        cursor: pointer;
+      }
 
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-right: 100px;
-        }
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-right: 100px;
+      }
 
-        .section {
-            margin: 15px 0;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-        }
+      .section {
+        margin: 15px 0;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+      }
 
-        .current-time {
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #2c3e50;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #ecf0f1;
-            border-radius: 5px;
-        }
+      .current-time {
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #2c3e50;
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #ecf0f1;
+        border-radius: 5px;
+      }
 
-        .copy-button {
-            display: block;
-            width: 200px;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: white;
-            background-color: #2ecc71;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+      .copy-button {
+        display: block;
+        width: 200px;
+        margin: 20px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: #2ecc71;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
 
-        .copy-button:hover {
-            background-color: #27ae60;
-        }
+      .copy-button:hover {
+        background-color: #27ae60;
+      }
 
-        .copy-button:active {
-            transform: scale(0.98);
-        }
+      .copy-button:active {
+        transform: scale(0.98);
+      }
 
-        .copy-feedback {
-            display: none;
-            text-align: center;
-            color: #27ae60;
-            margin-top: 10px;
-            font-weight: bold;
-        }
+      .copy-feedback {
+        display: none;
+        text-align: center;
+        color: #27ae60;
+        margin-top: 10px;
+        font-weight: bold;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="country-selector">
-        <select id="countrySelect" class="country-select" onchange="updateContent()">
-            <option value="CN">中国</option>
-            <option value="UAE">阿联酋</option>
-            <option value="UK">英国</option>
-            <option value="KR">韩国</option>
-            <option value="US">美国</option>
-        </select>
-        <select id="languageSelect" class="language-select" onchange="updateContent()">
-            <option value="zh-CN">中文</option>
-            <option value="en-US">English</option>
-        </select>
+      <select
+        id="countrySelect"
+        class="country-select"
+        onchange="updateContent()"
+      >
+        <option value="CN">中国</option>
+        <option value="UAE">阿联酋</option>
+        <option value="UK">英国</option>
+        <option value="KR">韩国</option>
+        <option value="US">美国</option>
+      </select>
+      <select
+        id="languageSelect"
+        class="language-select"
+        onchange="updateContent()"
+      >
+        <option value="zh-CN">中文</option>
+        <option value="en-US">English</option>
+      </select>
     </div>
     <div class="container">
-        
-        <h2 id="webTitle" style="text-align: center;"></h2>
-        <div class="current-time" id="currentTime"></div>
-        <div id="mainContent"></div>
-        <button id="copyButton" class="copy-button" onclick="copyContent()"></button>
-        <div id="copyFeedback" class="copy-feedback"></div>
+      <h2 id="webTitle" style="text-align: center"></h2>
+      <div class="current-time" id="currentTime"></div>
+      <div id="mainContent"></div>
+      <button
+        id="copyButton"
+        class="copy-button"
+        onclick="copyContent()"
+      ></button>
+      <div id="copyFeedback" class="copy-feedback"></div>
     </div>
 
     <script>
-        // 各国节假日数据
-        const holidaysByCountry = {
-            CN: [
-                { name: "清明", month: 4, day: 4, description: "4月4日（周五）至6日（周日）放假，共3天" },
-                { name: "五一", month: 5, day: 1, description: "5月1日（周四）至5日（周一）放假调休，共5天。4月27日（周日）上班" },
-                { name: "端午", month: 5, day: 31, description: "5月31日（周六）至6月2日（周一）放假，共3天" },
-                { name: "国庆节、中秋节", month: 10, day: 1, description: "10月1日（周三）至8日（周三）放假调休，共8天。9月28日（周日）、10月11日（周六）上班" }
-            ],
-            UAE: [
-                { name: "开斋节", month: 3, day: 29, description: "2025年3月29日（周六）-4月1日（周二），共4天。开斋节标志着斋月的结束" },
-                { name: "阿拉法特日", month: 6, day: 5, description: "2025年6月5日（周四），朝觐活动的重要日期" },
-                { name: "宰牲节", month: 6, day: 6, description: "2025年6月6日（周五）-8日（周日），共3天。伊斯兰教最重要的节日之一" },
-                { name: "伊斯兰新年", month: 6, day: 26, description: "2025年6月26日（周四），伊斯兰新年" },
-                { name: "先知诞辰", month: 9, day: 4, description: "2025年9月4日（周四），纪念先知穆罕默德诞辰" },
-                { name: "烈士日", month: 12, day: 1, description: "2025年12月1日（周一），纪念为国捐躯的阿联酋烈士" },
-                { name: "国庆节", month: 12, day: 2, description: "2025年12月2日（周二）-3日（周三），共2天。庆祝阿联酋建国54周年" }
-            ],
-            UK: [
-                { name: "Good Friday", month: 4, day: 18, description: "Bank Holiday" },
-                { name: "Easter Monday", month: 4, day: 21, description: "Bank Holiday" },
-                { name: "Early May bank holiday", month: 5, day: 5, description: "Bank Holiday" },
-                { name: "Spring bank holiday", month: 5, day: 26, description: "Bank Holiday" },
-                { name: "Summer bank holiday", month: 8, day: 25, description: "Bank Holiday" },
-                { name: "Christmas Day", month: 12, day: 25, description: "Bank Holiday" },
-                { name: "Boxing Day", month: 12, day: 26, description: "Bank Holiday" }
-            ],
-            KR: [
-                { name: "삼일절", month: 3, day: 1, description: "3.1절" },
-                { name: "삼일절", month: 3, day: 3, description: "3·1 운동/삼일절 휴일" },
-                { name: "어린이날", month: 5, day: 5, description: "어린이날" },
-                { name: "부처님오신날", month: 5, day: 6, description: "부처님오신날" },
-                { name: "현충일", month: 6, day: 6, description: "현충일" },
-                { name: "광복절", month: 8, day: 15, description: "광복절" },
-                { name: "추석", month: 9, day: 30, description: "음력 추석" }
-            ],
-            US: [
-                { name: "New Year's Day", month: 1, day: 1, description: "Federal Holiday" },
-                { name: "Martin Luther King Jr. Day", month: 1, day: 20, description: "Federal Holiday" },
-                { name: "Washington's Birthday", month: 2, day: 17, description: "Federal Holiday" },
-                { name: "Memorial Day", month: 5, day: 26, description: "Federal Holiday" },
-                { name: "Juneteenth National Independence Day", month: 6, day: 19, description: "Federal Holiday" },
-                { name: "Independence Day", month: 7, day: 4, description: "Federal Holiday" },
-                { name: "Labor Day", month: 9, day: 1, description: "Federal Holiday" },
-                { name: "Columbus Day", month: 10, day: 13, description: "Federal Holiday" },
-                { name: "Veterans Day", month: 11, day: 11, description: "Federal Holiday" },
-                { name: "Thanksgiving Day", month: 11, day: 27, description: "Federal Holiday" },
-                { name: "Christmas Day", month: 12, day: 25, description: "Federal Holiday" }
+      // 各国节假日数据
+      const holidaysByCountry = {
+        CN: [
+          {
+            name: "清明",
+            month: 4,
+            day: 4,
+            description: "4月4日（周五）至6日（周日）放假，共3天",
+          },
+          {
+            name: "五一",
+            month: 5,
+            day: 1,
+            description:
+              "5月1日（周四）至5日（周一）放假调休，共5天。4月27日（周日）上班",
+          },
+          {
+            name: "端午",
+            month: 5,
+            day: 31,
+            description: "5月31日（周六）至6月2日（周一）放假，共3天",
+          },
+          {
+            name: "国庆节、中秋节",
+            month: 10,
+            day: 1,
+            description:
+              "10月1日（周三）至8日（周三）放假调休，共8天。9月28日（周日）、10月11日（周六）上班",
+          },
+        ],
+        UAE: [
+          {
+            name: "开斋节",
+            month: 3,
+            day: 29,
+            description:
+              "2025年3月29日（周六）-4月1日（周二），共4天。开斋节标志着斋月的结束",
+          },
+          {
+            name: "阿拉法特日",
+            month: 6,
+            day: 5,
+            description: "2025年6月5日（周四），朝觐活动的重要日期",
+          },
+          {
+            name: "宰牲节",
+            month: 6,
+            day: 6,
+            description:
+              "2025年6月6日（周五）-8日（周日），共3天。伊斯兰教最重要的节日之一",
+          },
+          {
+            name: "伊斯兰新年",
+            month: 6,
+            day: 26,
+            description: "2025年6月26日（周四），伊斯兰新年",
+          },
+          {
+            name: "先知诞辰",
+            month: 9,
+            day: 4,
+            description: "2025年9月4日（周四），纪念先知穆罕默德诞辰",
+          },
+          {
+            name: "烈士日",
+            month: 12,
+            day: 1,
+            description: "2025年12月1日（周一），纪念为国捐躯的阿联酋烈士",
+          },
+          {
+            name: "国庆节",
+            month: 12,
+            day: 2,
+            description:
+              "2025年12月2日（周二）-3日（周三），共2天。庆祝阿联酋建国54周年",
+          },
+        ],
+        UK: [
+          {
+            name: "Good Friday",
+            month: 4,
+            day: 18,
+            description: "Bank Holiday",
+          },
+          {
+            name: "Easter Monday",
+            month: 4,
+            day: 21,
+            description: "Bank Holiday",
+          },
+          {
+            name: "Early May bank holiday",
+            month: 5,
+            day: 5,
+            description: "Bank Holiday",
+          },
+          {
+            name: "Spring bank holiday",
+            month: 5,
+            day: 26,
+            description: "Bank Holiday",
+          },
+          {
+            name: "Summer bank holiday",
+            month: 8,
+            day: 25,
+            description: "Bank Holiday",
+          },
+          {
+            name: "Christmas Day",
+            month: 12,
+            day: 25,
+            description: "Bank Holiday",
+          },
+          {
+            name: "Boxing Day",
+            month: 12,
+            day: 26,
+            description: "Bank Holiday",
+          },
+        ],
+        KR: [
+          { name: "삼일절", month: 3, day: 1, description: "3.1절" },
+          {
+            name: "삼일절",
+            month: 3,
+            day: 3,
+            description: "3·1 운동/삼일절 휴일",
+          },
+          { name: "어린이날", month: 5, day: 5, description: "어린이날" },
+          {
+            name: "부처님오신날",
+            month: 5,
+            day: 6,
+            description: "부처님오신날",
+          },
+          { name: "현충일", month: 6, day: 6, description: "현충일" },
+          { name: "광복절", month: 8, day: 15, description: "광복절" },
+          { name: "추석", month: 9, day: 30, description: "음력 추석" },
+        ],
+        US: [
+          {
+            name: "New Year's Day",
+            month: 1,
+            day: 1,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Martin Luther King Jr. Day",
+            month: 1,
+            day: 20,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Washington's Birthday",
+            month: 2,
+            day: 17,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Memorial Day",
+            month: 5,
+            day: 26,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Juneteenth National Independence Day",
+            month: 6,
+            day: 19,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Independence Day",
+            month: 7,
+            day: 4,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Labor Day",
+            month: 9,
+            day: 1,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Columbus Day",
+            month: 10,
+            day: 13,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Veterans Day",
+            month: 11,
+            day: 11,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Thanksgiving Day",
+            month: 11,
+            day: 27,
+            description: "Federal Holiday",
+          },
+          {
+            name: "Christmas Day",
+            month: 12,
+            day: 25,
+            description: "Federal Holiday",
+          },
+        ],
+      };
 
-            ]
-        };
+      const translations = {
+        "zh-CN": {
+          webTitle: "【摸鱼办】温馨提醒",
+          holiday: `节假日`,
+          salary: "【工资】",
+          daysToPayday: "距离【月底发工资】：",
+          daysToPayday5: "距离【05号发工资】：",
+          daysToPayday10: "距离【10号发工资】：",
+          daysToPayday15: "距离【15号发工资】：",
+          daysToPayday20: "距离【20号发工资】：",
+          daysToPayday25: "距离【25号发工资】：",
+          daysToSaturday: `距离【周六】还有 `,
+          days: "天",
+          hours: "小时",
+          yearPassed: (daysPassed, hoursPassed) =>
+            `${new Date().getFullYear()}年已经过去 ${daysPassed} 天 ${hoursPassed} 小时，`,
+          todayIs: (weekdays) =>
+            `今天是 ${new Date().getFullYear()}年${
+              new Date().getMonth() + 1
+            }月${new Date().getDate()}日，星期${weekdays[new Date().getDay()]}`,
+          greeting: "你好，摸鱼人！工作再忙，一定不要忘记摸鱼哦！",
+          workReminder:
+            "有事没事起身去茶水间，去厕所，去走廊走走，去找同事聊聊八卦\n别老在工位上坐着，钱是老板的但命是自己的。",
+          timeInCountry: (countryName, countryTime, countryTimezone) =>
+            `当前${countryName}时间：${countryTime} (${countryTimezone})`,
+          currentTimeString: (timeString, timezoneOffsetString) =>
+            `当前本地时间：${timeString} (${timezoneOffsetString})`,
+          holidays: (countryName) => `【${countryName}节假日】`,
+          copySuccess: "复制成功！",
+          copyFailed: "复制失败，请重试",
+          countries: {
+            CN: "中国",
+            UAE: "阿联酋",
+            UK: "英国",
+            KR: "韩国",
+            US: "美国",
+          },
+          daysToHoliday: "距离",
+          still: "还有",
+          copyButton: "一键复制摸鱼提醒",
+        },
+        "en-US": {
+          webTitle: "[Fish-Touching Office] Gentle Reminder",
+          holiday: `Holidays`,
+          salary: "【Salary】",
+          daysToPayday: "Days to [End of month payday]:",
+          daysToPayday5: "Days to [5th payday]:",
+          daysToPayday10: "Days to [10th payday]:",
+          daysToPayday15: "Days to [15th payday]:",
+          daysToPayday20: "Days to [20th payday]:",
+          daysToPayday25: "Days to [25th payday]:",
+          daysToSaturday: `Days to [Saturday]: `,
+          days: "days",
+          hours: "hours",
+          yearPassed: (daysPassed, hoursPassed) =>
+            `${new Date().getFullYear()} has passed ${daysPassed} days and ${hoursPassed} hours.`,
+          todayIs: (weekdays) =>
+            `Today is ${new Date().getFullYear()}/${
+              new Date().getMonth() + 1
+            }/${new Date().getDate()}, Weekday ${
+              weekdays[new Date().getDay()]
+            }`,
+          greeting:
+            "Hello, fish-toucher! No matter how busy you are, don't forget to touch fish!",
+          workReminder:
+            "Take a break and walk around the pantry, restroom, or hallway. Chat with colleagues about gossip.\nDon't just sit at your desk all the time. The money belongs to the boss, but your life is your own.",
+          timeInCountry: (countryName, countryTime, countryTimezone) =>
+            `Current time in ${countryName}: ${countryTime} (${countryTimezone})`,
+          currentTimeString: (timeString, timezoneOffsetString) =>
+            `Current local time: ${timeString} (${timezoneOffsetString})`,
+          holidays: (countryName) => `【${countryName} Holidays】`,
+          copySuccess: "Copy Success!",
+          copyFailed: "Copy failed, please try again",
+          countries: {
+            CN: "China",
+            UAE: "United Arab Emirates",
+            UK: "United Kingdom",
+            KR: "South Korea",
+            US: "United States",
+          },
+          daysToHoliday: "Days to",
+          still: "still",
+          copyButton: "Copy Fish-Touching Reminder",
+        },
+      };
 
-        const translations = {
-            'zh-CN': {
-                webTitle: "【摸鱼办】温馨提醒",
-                holiday: `节假日`,
-                salary: '【工资】',
-                daysToPayday: '距离【月底发工资】：',
-                daysToPayday5: '距离【05号发工资】：',
-                daysToPayday10: '距离【10号发工资】：',
-                daysToPayday15: '距离【15号发工资】：',
-                daysToPayday20: '距离【20号发工资】：',
-                daysToPayday25: '距离【25号发工资】：',
-                daysToSaturday: `距离【周六】还有 `,
-                days: '天',
-                hours: '小时',
-                yearPassed: (daysPassed, hoursPassed) => `${new Date().getFullYear()}年已经过去 ${daysPassed} 天 ${hoursPassed} 小时，`,
-                todayIs: (weekdays) => `今天是 ${new Date().getFullYear()}年${new Date().getMonth() + 1}月${new Date().getDate()}日，星期${weekdays[new Date().getDay()]}`,
-                greeting: '你好，摸鱼人！工作再忙，一定不要忘记摸鱼哦！',
-                workReminder: '有事没事起身去茶水间，去厕所，去走廊走走，去找同事聊聊八卦\n别老在工位上坐着，钱是老板的但命是自己的。',
-                timeInCountry: (countryName, countryTime, countryTimezone) => `当前${countryName}时间：${countryTime} (${countryTimezone})`,
-                currentTimeString: (timeString, timezoneOffsetString) => `当前本地时间：${timeString} (${timezoneOffsetString})`,
-                holidays: (countryName) => `【${countryName}节假日】`,
-                copySuccess: '复制成功！',
-                copyFailed: '复制失败，请重试',
-                countries: {
-                    CN: "中国",
-                    UAE: "阿联酋",
-                    UK: "英国",
-                    KR: "韩国",
-                    US: "美国"
-                },
-                daysToHoliday: "距离",
-                still: "还有",
-                copyButton: "一键复制摸鱼提醒"
-            },
-            'en-US': {
-                webTitle: "[Fish-Touching Office] Gentle Reminder",
-                holiday: `Holidays`,
-                salary: '【Salary】',
-                daysToPayday: 'Days to [End of month payday]:',
-                daysToPayday5: 'Days to [5th payday]:',
-                daysToPayday10: 'Days to [10th payday]:',
-                daysToPayday15: 'Days to [15th payday]:',
-                daysToPayday20: 'Days to [20th payday]:',
-                daysToPayday25: 'Days to [25th payday]:',
-                daysToSaturday: `Days to [Saturday]: `,
-                days: 'days',
-                hours: 'hours',
-                yearPassed: (daysPassed, hoursPassed) => `${new Date().getFullYear()} has passed ${daysPassed} days and ${hoursPassed} hours.`,
-                todayIs: (weekdays) => `Today is ${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}, Weekday ${weekdays[new Date().getDay()]}`,
-                greeting: 'Hello, fish-toucher! No matter how busy you are, don\'t forget to touch fish!',
-                workReminder: 'Take a break and walk around the pantry, restroom, or hallway. Chat with colleagues about gossip.\nDon\'t just sit at your desk all the time. The money belongs to the boss, but your life is your own.',
-                timeInCountry: (countryName, countryTime, countryTimezone) => `Current time in ${countryName}: ${countryTime} (${countryTimezone})`,
-                currentTimeString: (timeString, timezoneOffsetString) => `Current local time: ${timeString} (${timezoneOffsetString})`,
-                holidays: (countryName) => `【${countryName} Holidays】`,
-                copySuccess: 'Copy Success!',
-                copyFailed: 'Copy failed, please try again',
-                countries: {
-                    CN: "China",
-                    UAE: "United Arab Emirates",
-                    UK: "United Kingdom",
-                    KR: "South Korea",
-                    US: "United States"
-                },
-                daysToHoliday: "Days to",
-                still: "still",
-                copyButton: "Copy Fish-Touching Reminder"
-            }
-        };
+      // Function to get the current language data
+      function getLangData() {
+        const language = document.getElementById("languageSelect").value;
+        return translations[language];
+      }
 
-        // Function to get the current language data
-        function getLangData() {
-            const language = document.getElementById('languageSelect').value;
-            return translations[language];
+      function padZero(num) {
+        return num < 10 ? "0" + num : num;
+      }
+
+      function updateCurrentTime() {
+        const now = new Date();
+        const timeString = `${padZero(now.getHours())}:${padZero(
+          now.getMinutes()
+        )}:${padZero(now.getSeconds())}`;
+        const timezoneOffsetString = getTimezoneOffsetString();
+        const langData = getLangData();
+        document.getElementById("currentTime").textContent =
+          langData.currentTimeString(timeString, timezoneOffsetString);
+      }
+
+      function updateCurrentCountryTime() {
+        const country = document.getElementById("countrySelect").value;
+        const countryTimezone = getTimezoneForCountry(country);
+        const countryTime = new Date().toLocaleString("en-US", {
+          timeZone: countryTimezone,
+        });
+        const countryName = getCountryName(country);
+        const langData = getLangData();
+        document.getElementById("currentCountryTime").textContent =
+          langData.timeInCountry(countryName, countryTime, countryTimezone);
+      }
+
+      function getTimezoneOffsetString() {
+        const now = new Date();
+        const timezoneOffset = now.getTimezoneOffset();
+        const timezoneOffsetHours = -timezoneOffset / 60;
+        return `UTC${
+          timezoneOffsetHours >= 0 ? "+" : ""
+        }${timezoneOffsetHours}`;
+      }
+
+      function getCountryName(code) {
+        const langData = getLangData();
+        return langData.countries[code] || code;
+      }
+
+      function getDaysToHoliday(month, day) {
+        const now = new Date();
+        let targetDate = new Date(now.getFullYear(), month - 1, day);
+        if (targetDate < now) {
+          targetDate.setFullYear(targetDate.getFullYear() + 1);
         }
+        const diff = targetDate - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        return { days, hours };
+      }
 
-        function padZero(num) {
-            return num < 10 ? '0' + num : num;
-        }
+      function getHolidaySection() {
+        const country = document.getElementById("countrySelect").value;
+        const holidays = holidaysByCountry[country];
+        const langData = getLangData();
+        const countryName = getCountryName(country);
 
-        function updateCurrentTime() {
-            const now = new Date();
-            const timeString = `${padZero(now.getHours())}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())}`;
-            const timezoneOffsetString = getTimezoneOffsetString();
-            const langData = getLangData();
-            document.getElementById('currentTime').textContent = langData.currentTimeString(timeString, timezoneOffsetString);
-        }
+        let holidayHtml = `<h3 style="text-align: center;">${langData.holidays(
+          countryName
+        )}</h3>`;
 
-        function updateCurrentCountryTime() {
-            const country = document.getElementById('countrySelect').value;
-            const countryTimezone = getTimezoneForCountry(country);
-            const countryTime = new Date().toLocaleString('en-US', { timeZone: countryTimezone });
-            const countryName = getCountryName(country);
-            const langData = getLangData();
-            document.getElementById('currentCountryTime').textContent = langData.timeInCountry(countryName, countryTime, countryTimezone);
-        }
-
-        function getTimezoneOffsetString() {
-            const now = new Date();
-            const timezoneOffset = now.getTimezoneOffset();
-            const timezoneOffsetHours = -timezoneOffset / 60;
-            return `UTC${timezoneOffsetHours >= 0 ? '+' : ''}${timezoneOffsetHours}`;
-        }
-
-        function getCountryName(code) {
-            const langData = getLangData();
-            return langData.countries[code] || code;
-        }
-
-        function getDaysToHoliday(month, day) {
-            const now = new Date();
-            let targetDate = new Date(now.getFullYear(), month - 1, day);
-            if (targetDate < now) {
-                targetDate.setFullYear(targetDate.getFullYear() + 1);
-            }
-            const diff = targetDate - now;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            return { days, hours };
-        }
-
-        function getHolidaySection() {
-            const country = document.getElementById('countrySelect').value;
-            const holidays = holidaysByCountry[country];
-            const langData = getLangData();
-            const countryName = getCountryName(country);
-
-            let holidayHtml = `<h3 style="text-align: center;">${langData.holidays(countryName)}</h3>`;
-
-            holidays.forEach(holiday => {
-                const { days, hours } = getDaysToHoliday(holiday.month, holiday.day);
-                holidayHtml += `
+        holidays.forEach((holiday) => {
+          const { days, hours } = getDaysToHoliday(holiday.month, holiday.day);
+          holidayHtml += `
                     <p>${langData.daysToHoliday} ${holiday.name} ${langData.still} : ${days} ${langData.days} ${hours} ${langData.hours}. ${holiday.description}</p>
                 `;
-            });
+        });
 
-            return holidayHtml;
+        return holidayHtml;
+      }
+
+      // Function to get the timezone for a specific country
+      function getTimezoneForCountry(countryCode) {
+        const timezones = {
+          CN: "Asia/Shanghai", // 中国
+          UAE: "Asia/Dubai", // 阿联酋
+          UK: "Europe/London", // 英国
+          KR: "Asia/Seoul", // 韩国
+          US: "America/New_York", // 美国 (Example: New York)
+        };
+        return timezones[countryCode] || "UTC"; // Default to UTC if not found
+      }
+
+      function getDaysToDate(day) {
+        const now = new Date();
+        let targetDate = new Date(now);
+        targetDate.setDate(day);
+        if (now.getDate() > day) {
+          targetDate.setMonth(targetDate.getMonth() + 1);
         }
+        return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
+      }
 
-        // Function to get the timezone for a specific country
-        function getTimezoneForCountry(countryCode) {
-            const timezones = {
-                CN: 'Asia/Shanghai',    // 中国
-                UAE: 'Asia/Dubai',       // 阿联酋
-                UK: 'Europe/London',     // 英国
-                KR: 'Asia/Seoul',        // 韩国
-                US: 'America/New_York'  // 美国 (Example: New York)
-            };
-            return timezones[countryCode] || 'UTC'; // Default to UTC if not found
-        }
+      function updateContent() {
+        const now = new Date();
+        const langData = getLangData();
+        const country = document.getElementById("countrySelect").value; // Get the selected country
+        const countryName = getCountryName(country);
+        const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+        const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
+        const daysPassed = Math.floor(
+          (now - new Date(now.getFullYear(), 0, 1)) / (24 * 60 * 60 * 1000)
+        );
+        const hoursPassed = now.getHours();
 
-        function getDaysToDate(day) {
-            const now = new Date();
-            let targetDate = new Date(now);
-            targetDate.setDate(day);
-            if (now.getDate() > day) {
-                targetDate.setMonth(targetDate.getMonth() + 1);
-            }
-            return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
-        }
+        // Get the timezone for the selected country
+        const countryTimezone = getTimezoneForCountry(country);
 
-        function updateContent() {
-            const now = new Date();
-            const langData = getLangData();
-            const country = document.getElementById('countrySelect').value; // Get the selected country
-            const countryName = getCountryName(country);
-            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-            const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
-            const daysPassed = Math.floor((now - new Date(now.getFullYear(), 0, 1)) / (24 * 60 * 60 * 1000));
-            const hoursPassed = now.getHours();
+        // Get the current time in the selected country's timezone
+        const countryTime = new Date().toLocaleString("en-US", {
+          timeZone: countryTimezone,
+        });
 
-            // Get the timezone for the selected country
-            const countryTimezone = getTimezoneForCountry(country);
-
-            // Get the current time in the selected country's timezone
-            const countryTime = new Date().toLocaleString('en-US', { timeZone: countryTimezone });
-
-            document.getElementById('webTitle').textContent = langData.webTitle;
-            const content = `
+        document.getElementById("webTitle").textContent = langData.webTitle;
+        const content = `
                 <div class="section" id="currentCountryTime" style="text-align: center;">
-                    <p>${langData.timeInCountry(countryName, countryTime, countryTimezone)}</p>
+                    <p>${langData.timeInCountry(
+                      countryName,
+                      countryTime,
+                      countryTimezone
+                    )}</p>
                 </div>
 
                 <div class="section" style="text-align: center;">
@@ -379,13 +585,27 @@
 
                 <div class="section" style="text-align: center;">
                     <h3 style="text-align: center;">${langData.salary}</h3>
-                    <p>${langData.daysToPayday}：${getDaysToDate(30)} ${langData.days}</p>
-                    <p>${langData.daysToPayday5}${getDaysToDate(5)} ${langData.days}</p>
-                    <p>${langData.daysToPayday10}${getDaysToDate(10)} ${langData.days}</p>
-                    <p>${langData.daysToPayday15}${getDaysToDate(15)} ${langData.days}</p>
-                    <p>${langData.daysToPayday20}${getDaysToDate(20)} ${langData.days}</p>
-                    <p>${langData.daysToPayday25}${getDaysToDate(25)} ${langData.days}</p>
-                    <p>${langData.daysToSaturday}${daysToSaturday} ${langData.days}</p>
+                    <p>${langData.daysToPayday}：${getDaysToDate(30)} ${
+          langData.days
+        }</p>
+                    <p>${langData.daysToPayday5}${getDaysToDate(5)} ${
+          langData.days
+        }</p>
+                    <p>${langData.daysToPayday10}${getDaysToDate(10)} ${
+          langData.days
+        }</p>
+                    <p>${langData.daysToPayday15}${getDaysToDate(15)} ${
+          langData.days
+        }</p>
+                    <p>${langData.daysToPayday20}${getDaysToDate(20)} ${
+          langData.days
+        }</p>
+                    <p>${langData.daysToPayday25}${getDaysToDate(25)} ${
+          langData.days
+        }</p>
+                    <p>${langData.daysToSaturday}${daysToSaturday} ${
+          langData.days
+        }</p>
                 </div>
 
                 <div class="section">
@@ -393,31 +613,40 @@
                 </div>
             `;
 
-            document.getElementById('mainContent').innerHTML = content;
+        document.getElementById("mainContent").innerHTML = content;
 
-            document.getElementById('copyButton').textContent = langData.copyButton;
-        }
+        document.getElementById("copyButton").textContent = langData.copyButton;
+      }
 
-        function getTextContent() {
-            const now = new Date();
-            const langData = getLangData();
-            const country = document.getElementById('countrySelect').value;
-            const countryName = getCountryName(country);
-            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-            const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
-            const daysPassed = Math.floor((now - new Date(now.getFullYear(), 0, 1)) / (24 * 60 * 60 * 1000));
-            const hoursPassed = now.getHours();
+      function getTextContent() {
+        const now = new Date();
+        const langData = getLangData();
+        const country = document.getElementById("countrySelect").value;
+        const countryName = getCountryName(country);
+        const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+        const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
+        const daysPassed = Math.floor(
+          (now - new Date(now.getFullYear(), 0, 1)) / (24 * 60 * 60 * 1000)
+        );
+        const hoursPassed = now.getHours();
 
-            // Get the timezone for the selected country
-            const countryTimezone = getTimezoneForCountry(country);
+        // Get the timezone for the selected country
+        const countryTimezone = getTimezoneForCountry(country);
 
-            // Get the current time in the selected country's timezone
-            const countryTime = new Date().toLocaleString('en-US', { timeZone: countryTimezone });
+        // Get the current time in the selected country's timezone
+        const countryTime = new Date().toLocaleString("en-US", {
+          timeZone: countryTimezone,
+        });
 
-            const timezoneOffsetString = getTimezoneOffsetString();
+        const timezoneOffsetString = getTimezoneOffsetString();
 
-            let text = `${langData.webTitle}
-${langData.currentTimeString(padZero(now.getHours()), padZero(now.getMinutes()), padZero(now.getSeconds()), timezoneOffsetString)}
+        let text = `${langData.webTitle}
+${langData.currentTimeString(
+  padZero(now.getHours()),
+  padZero(now.getMinutes()),
+  padZero(now.getSeconds()),
+  timezoneOffsetString
+)}
 ${langData.timeInCountry(countryName, countryTime, countryTimezone)}
 ${langData.yearPassed(daysPassed, hoursPassed)}
 ${langData.todayIs(weekdays)}
@@ -436,41 +665,40 @@ ${langData.daysToSaturday}${daysToSaturday}${langData.day}
 
 ${langData.holidays(countryName)}\n`;
 
-            holidaysByCountry[country].forEach(holiday => {
-                const { days, hours } = getDaysToHoliday(holiday.month, holiday.day);
-                text += `Distance to 【${holiday.name}】: ${days} days ${hours} hours. ${holiday.description}\n`;
-            });
+        holidaysByCountry[country].forEach((holiday) => {
+          const { days, hours } = getDaysToHoliday(holiday.month, holiday.day);
+          text += `Distance to 【${holiday.name}】: ${days} days ${hours} hours. ${holiday.description}\n`;
+        });
 
-            return text;
+        return text;
+      }
+
+      async function copyContent() {
+        const textContent = getTextContent();
+        const langData = getLangData();
+        try {
+          await navigator.clipboard.writeText(textContent);
+          const feedback = document.getElementById("copyFeedback");
+          feedback.textContent = langData.copySuccess;
+          feedback.style.display = "block";
+          setTimeout(() => {
+            feedback.style.display = "none";
+          }, 2000);
+        } catch (err) {
+          alert(langData.copyFailed);
         }
+      }
 
-        async function copyContent() {
-            const textContent = getTextContent();
-            const langData = getLangData();
-            try {
-                await navigator.clipboard.writeText(textContent);
-                const feedback = document.getElementById('copyFeedback');
-                feedback.textContent = langData.copySuccess;
-                feedback.style.display = 'block';
-                setTimeout(() => {
-                    feedback.style.display = 'none';
-                }, 2000);
-            } catch (err) {
-                alert(langData.copyFailed);
-            }
-        }
+      // 初始更新
+      updateContent();
+      updateCurrentTime();
+      updateCurrentCountryTime();
 
-        // 初始更新
-        updateContent();
-        updateCurrentTime();
-        updateCurrentCountryTime();
+      // 时间更新：每秒更新时分秒
+      setInterval(updateCurrentTime, 1000);
 
-        // 时间更新：每秒更新时分秒
-        setInterval(updateCurrentTime, 1000);
-
-        // 内容更新：每分钟更新一次
-        setInterval(updateContent, 60000);
+      // 内容更新：每分钟更新一次
+      setInterval(updateContent, 60000);
     </script>
-</body>
-
+  </body>
 </html>
