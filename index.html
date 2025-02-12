@@ -126,11 +126,11 @@
     </div>
     <div class="container">
         
-        <h2 id="webTitle" style="text-align: center;">【摸鱼办】温馨提醒</h2>
+        <h2 id="webTitle" style="text-align: center;"></h2>
         <div class="current-time" id="currentTime"></div>
         <div id="mainContent"></div>
-        <button class="copy-button" onclick="copyContent()">一键复制摸鱼提醒</button>
-        <div id="copyFeedback" class="copy-feedback">复制成功！</div>
+        <button id="copyButton" class="copy-button" onclick="copyContent()"></button>
+        <div id="copyFeedback" class="copy-feedback"></div>
     </div>
 
     <script>
@@ -143,7 +143,7 @@
                 { name: "国庆节、中秋节", month: 10, day: 1, description: "10月1日（周三）至8日（周三）放假调休，共8天。9月28日（周日）、10月11日（周六）上班" }
             ],
             UAE: [
-                { name: "开斋节", month: 2, day: 29, description: "2025年3月29日（周六）-4月1日（周二），共4天。开斋节标志着斋月的结束" },
+                { name: "开斋节", month: 3, day: 29, description: "2025年3月29日（周六）-4月1日（周二），共4天。开斋节标志着斋月的结束" },
                 { name: "阿拉法特日", month: 6, day: 5, description: "2025年6月5日（周四），朝觐活动的重要日期" },
                 { name: "宰牲节", month: 6, day: 6, description: "2025年6月6日（周五）-8日（周日），共3天。伊斯兰教最重要的节日之一" },
                 { name: "伊斯兰新年", month: 6, day: 26, description: "2025年6月26日（周四），伊斯兰新年" },
@@ -216,7 +216,8 @@
                     US: "美国"
                 },
                 daysToHoliday: "距离",
-                still: "还有"
+                still: "还有",
+                copyButton: "一键复制摸鱼提醒"
             },
             'en-US': {
                 webTitle: "[Fish-Touching Office] Gentle Reminder",
@@ -248,7 +249,8 @@
                     US: "United States"
                 },
                 daysToHoliday: "Days to",
-                still: "still"
+                still: "still",
+                copyButton: "Copy Fish-Touching Reminder"
             }
         };
 
@@ -392,6 +394,8 @@
             `;
 
             document.getElementById('mainContent').innerHTML = content;
+
+            document.getElementById('copyButton').textContent = langData.copyButton;
         }
 
         function getTextContent() {
@@ -446,6 +450,7 @@ ${langData.holidays(countryName)}\n`;
             try {
                 await navigator.clipboard.writeText(textContent);
                 const feedback = document.getElementById('copyFeedback');
+                feedback.textContent = langData.copySuccess;
                 feedback.style.display = 'block';
                 setTimeout(() => {
                     feedback.style.display = 'none';
