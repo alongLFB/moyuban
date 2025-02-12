@@ -38,6 +38,22 @@
             cursor: pointer;
         }
 
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .language-select {
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+        }
+
         h1 {
             color: #333;
             text-align: center;
@@ -95,23 +111,23 @@
 </head>
 
 <body>
+    <div class="country-selector">
+        <select id="countrySelect" class="country-select" onchange="updateContent()">
+            <option value="CN">中国</option>
+            <option value="UAE">阿联酋</option>
+            <option value="UK">英国</option>
+            <option value="KR">韩国</option>
+            <option value="US">美国</option>
+        </select>
+        <select id="languageSelect" class="language-select" onchange="updateContent()">
+            <option value="zh-CN">中文</option>
+            <option value="en-US">English</option>
+        </select>
+    </div>
     <div class="container">
-        <div class="country-selector">
-            <select id="countrySelect" class="country-select" onchange="updateContent()">
-                <option value="CN">中国</option>
-                <option value="UAE">阿联酋</option>
-                <option value="UK">英国</option>
-                <option value="KR">韩国</option>
-                <option value="US">美国</option>
-            </select>
-            <select id="languageSelect" class="country-select" onchange="updateContent()">
-                <option value="zh-CN">中文</option>
-                <option value="en-US">English</option>
-            </select>
-        </div>
-        <h1>【摸鱼办】温馨提醒</h1>
+        
+        <h2 id="webTitle" style="text-align: center;">【摸鱼办】温馨提醒</h2>
         <div class="current-time" id="currentTime"></div>
-        <div class="currentCountry-time" id="currentCountryTime"></div>
         <div id="mainContent"></div>
         <button class="copy-button" onclick="copyContent()">一键复制摸鱼提醒</button>
         <div id="copyFeedback" class="copy-feedback">复制成功！</div>
@@ -183,19 +199,65 @@
             // Convert the offset to hours and format it
             const timezoneOffsetHours = -timezoneOffset / 60;
             const timezoneOffsetString = `UTC${timezoneOffsetHours >= 0 ? '+' : ''}${timezoneOffsetHours}`;
+            const language = document.getElementById('languageSelect').value;
+            const translations = {
+                'zh-CN': {
+                    currentTimeString: `当前本地时间：${timeString} (${timezoneOffsetString})`,
+                },
+                'en-US': {
+                    currentTimeString: `Current local time: ${timeString} (${timezoneOffsetString})`,
+                }
+            };
+            const langData = translations[language];
 
-            document.getElementById('currentTime').textContent = `当前本地时间：${timeString} (${timezoneOffsetString})`;
+            document.getElementById('currentTime').textContent = langData.currentTimeString;
+        }
+
+        function updateCurrentCountryTime() {
+            const country = document.getElementById('countrySelect').value;
+            const countryTimezone = getTimezoneForCountry(country);
+            const countryTime = new Date().toLocaleString('en-US', { timeZone: countryTimezone });
+
+            const language = document.getElementById('languageSelect').value;
+            const translations = {
+                'zh-CN': {
+                    timeInCountry: `当前${countryName}时间：${countryTime} (${countryTimezone})`,
+                },
+                'en-US': {
+                    timeInCountry: `Current time in selected country: ${countryTime} (${countryTimezone})`,
+                }
+            };
+
+            const langData = translations[language];
+            document.getElementById('currentCountryTime').textContent = langData.timeInCountry;
+        }
+
+        function getTimezoneOffsetString() {
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset();
+            const timezoneOffsetHours = -timezoneOffset / 60;
+            return `UTC${timezoneOffsetHours >= 0 ? '+' : ''}${timezoneOffsetHours}`;
         }
 
         function getCountryName(code) {
+            let language = document.getElementById('languageSelect').value;
             const names = {
+                'zh-CN': {
                 CN: "中国",
                 UAE: "阿联酋",
                 UK: "英国",
                 KR: "韩国",
                 US: "美国"
+                },
+                'en-US': {
+                CN: "China",
+                UAE: "United Arab Emirates",
+                UK: "United Kingdom",
+                KR: "South Korea",
+                US: "United States"
+                }
             };
-            return names[code] || code;
+            return names[language][code] || code;
         }
 
         function getDaysToHoliday(month, day) {
@@ -213,7 +275,20 @@
         function getHolidaySection() {
             const country = document.getElementById('countrySelect').value;
             const holidays = holidaysByCountry[country];
-            let holidayHtml = `<h3 style="text-align: center;">【${getCountryName(country)}节假日】</h3>`;
+
+            const language = document.getElementById('languageSelect').value;
+            const translations = {
+                'zh-CN': {
+                    "holiday": `节假日`,
+                },
+                'en-US': {
+                    "holiday": `Holidays`,
+                }
+            };
+
+            const langData = translations[language];
+
+            let holidayHtml = `<h3 style="text-align: center;">【${getCountryName(country)} ${langData.holiday}】</h3>`;
 
             holidays.forEach(holiday => {
                 const { days, hours } = getDaysToHoliday(holiday.month, holiday.day);
@@ -225,8 +300,31 @@
             return holidayHtml;
         }
 
+        // Function to get the timezone for a specific country
+        function getTimezoneForCountry(countryCode) {
+            const timezones = {
+                CN: 'Asia/Shanghai',    // 中国
+                UAE: 'Asia/Dubai',       // 阿联酋
+                UK: 'Europe/London',     // 英国
+                KR: 'Asia/Seoul',        // 韩国
+                US: 'America/New_York'  // 美国 (Example: New York)
+            };
+            return timezones[countryCode] || 'UTC'; // Default to UTC if not found
+        }
+
+        function getDaysToDate(day) {
+            const now = new Date();
+            let targetDate = new Date(now);
+            targetDate.setDate(day);
+            if (now.getDate() > day) {
+                targetDate.setMonth(targetDate.getMonth() + 1);
+            }
+            return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
+        }
+
         function updateContent() {
             const now = new Date();
+            const timeString = `${padZero(now.getHours())}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())}`;
             const startOfYear = new Date(now.getFullYear(), 0, 1);
             const daysPassed = Math.floor((now - startOfYear) / (24 * 60 * 60 * 1000));
             const hoursPassed = now.getHours();
@@ -235,63 +333,70 @@
             const country = document.getElementById('countrySelect').value; // Get the selected country
             const language = document.getElementById('languageSelect').value; // Get the selected language
 
-            function getDaysToDate(day) {
-                let targetDate = new Date(now);
-                targetDate.setDate(day);
-                if (now.getDate() > day) {
-                    targetDate.setMonth(targetDate.getMonth() + 1);
-                }
-                return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
-            }
-
-            // Function to get the timezone for a specific country
-            function getTimezoneForCountry(countryCode) {
-                const timezones = {
-                    CN: 'Asia/Shanghai',    // 中国
-                    UAE: 'Asia/Dubai',       // 阿联酋
-                    UK: 'Europe/London',     // 英国
-                    KR: 'Asia/Seoul',        // 韩国
-                    US: 'America/New_York'  // 美国 (Example: New York)
-                };
-                return timezones[countryCode] || 'UTC'; // Default to UTC if not found
-            }
-
+            
             // Get the timezone for the selected country
             const countryTimezone = getTimezoneForCountry(country);
 
             // Get the current time in the selected country's timezone
             const countryTime = new Date().toLocaleString('en-US', { timeZone: countryTimezone });
 
+            countryName = getCountryName(country);
+
+            // Get the local timezone offset in minutes
+            const timezoneOffset = now.getTimezoneOffset();
+
+            // Convert the offset to hours and format it
+            const timezoneOffsetHours = -timezoneOffset / 60;
+            const timezoneOffsetString = `UTC${timezoneOffsetHours >= 0 ? '+' : ''}${timezoneOffsetHours}`;
+
             // Define language-specific content
             const translations = {
                 'zh-CN': {
-                    timeInCountry: `当前所选国家时间：${countryTime} (${countryTimezone})`,
+                    webTitle: "【摸鱼办】温馨提醒",
+                    timeInCountry: `当前${countryName}时间：${countryTime} (${countryTimezone})`,
+                    currentTimeString: `当前本地时间：${timeString} (${timezoneOffsetString})`,
                     yearPassed: `${now.getFullYear()}年已经过去 ${daysPassed} 天 ${hoursPassed} 小时，`,
                     todayIs: `今天是 ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日，星期${weekdays[now.getDay()]}`,
                     greeting: '你好，摸鱼人！工作再忙，一定不要忘记摸鱼哦！',
                     workReminder: '有事没事起身去茶水间，去厕所，去走廊走走，去找同事聊聊八卦\n别老在工位上坐着，钱是老板的但命是自己的。',
                     salary: '【工资】',
                     daysToPayday: '距离【月底发工资】：',
+                    daysToPayday5: '距离【05号发工资】：',
+                    daysToPayday10: '距离【10号发工资】：',
+                    daysToPayday15: '距离【15号发工资】：',
+                    daysToPayday20: '距离【20号发工资】：',
+                    daysToPayday25: '距离【25号发工资】：',
                     daysToSaturday: `距离【周六】还有 ${daysToSaturday} 天`,
-                    holidays: `【${getCountryName(country)}节假日】`
+                    holidays: `【${countryName}节假日】`,
+                    day: '天',
                 },
                 'en-US': {
-                    timeInCountry: `Current time in selected country: ${countryTime} (${countryTimezone})`,
+                    webTitle: "[Fish-Touching Office] Gentle Reminder",
+                    timeInCountry: `Current time in ${countryName}: ${countryTime} (${countryTimezone})`,
+                    currentTimeString: `Current local time: ${timeString} (${timezoneOffsetString})`,
                     yearPassed: `${now.getFullYear()} has passed ${daysPassed} days and ${hoursPassed} hours.`,
                     todayIs: `Today is ${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}, Weekday ${weekdays[now.getDay()]}`,
                     greeting: 'Hello, fish-toucher! No matter how busy you are, don\'t forget to touch fish!',
                     workReminder: 'Take a break and walk around the pantry, restroom, or hallway. Chat with colleagues about gossip.\nDon\'t just sit at your desk all the time. The money belongs to the boss, but your life is your own.',
                     salary: '【Salary】',
                     daysToPayday: 'Days to [End of month payday]:',
+                    daysToPayday5: 'Days to [5th payday]:',
+                    daysToPayday10: 'Days to [10th payday]:',
+                    daysToPayday15: 'Days to [15th payday]:',
+                    daysToPayday20: 'Days to [20th payday]:',
+                    daysToPayday25: 'Days to [25th payday]:',
                     daysToSaturday: `Days to [Saturday]: ${daysToSaturday}`,
-                    holidays: `【${getCountryName(country)} Holidays】`
+                    holidays: `【${countryName} Holidays】`,
+                    day: 'day',
                 }
             };
 
             const langData = translations[language];
 
+            document.getElementById('webTitle').textContent = langData.webTitle;
+            document.getElementById('currentTime').textContent = langData.currentTimeString;
             const content = `
-                <div class="section" style="text-align: center;">
+                <div class="section" id="currentCountryTime" style="text-align: center;">
                     <p>${langData.timeInCountry}</p>
                 </div>
 
@@ -307,17 +412,17 @@
 
                 <div class="section" style="text-align: center;">
                     <h3 style="text-align: center;">${langData.salary}</h3>
-                    <p>${langData.daysToPayday}：${getDaysToDate(30)} 天</p>
-                    <p>距离【05号发工资】：${getDaysToDate(5)} 天</p>
-                    <p>距离【10号发工资】：${getDaysToDate(10)} 天</p>
-                    <p>距离【15号发工资】：${getDaysToDate(15)} 天</p>
-                    <p>距离【20号发工资】：${getDaysToDate(20)} 天</p>
-                    <p>距离【25号发工资】：${getDaysToDate(25)} 天</p>
+                    <p>${langData.daysToPayday}：${getDaysToDate(30)} ${langData.day}</p>
+                    <p>${langData.daysToPayday5}${getDaysToDate(5)} ${langData.day}</p>
+                    <p>${langData.daysToPayday10}${getDaysToDate(10)} ${langData.day}</p>
+                    <p>${langData.daysToPayday15}${getDaysToDate(15)} ${langData.day}</p>
+                    <p>${langData.daysToPayday20}${getDaysToDate(20)} ${langData.day}</p>
+                    <p>${langData.daysToPayday25}${getDaysToDate(25)} ${langData.day}</p>
                     <p>${langData.daysToSaturday}</p>
                 </div>
 
                 <div class="section">
-                    <h3 style="text-align: center;">${langData.holidays}</h3>
+                    
                     ${getHolidaySection()}
                 </div>
             `;
@@ -342,11 +447,21 @@
                 }
                 return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
             }
+            // Get the timezone for the selected country
+            const countryTimezone = getTimezoneForCountry(country);
+
+            const countryName = getCountryName(country);
+
+            // Get the current time in the selected country's timezone
+            const countryTime = new Date().toLocaleString('en-US', { timeZone: countryTimezone });
+
+            const timezoneOffsetString = getTimezoneOffsetString();
 
             let text = `【摸鱼办】提醒您:
+当前本地时间：${padZero(now.getHours())}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())} (${timezoneOffsetString})
+当前${countryName}时间：${countryTime} (${countryTimezone})
 ${now.getFullYear()}年已经过去${daysPassed}天${hoursPassed}小时
 今天是${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日，星期${weekdays[now.getDay()]}
-当前时间：${padZero(now.getHours())}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())}
 
 你好，摸鱼人！工作再忙，一定不要忘记摸鱼哦！
 有事没事起身去茶水间，去厕所，去走廊走走，去找同事聊聊八卦
@@ -388,6 +503,7 @@ ${now.getFullYear()}年已经过去${daysPassed}天${hoursPassed}小时
         // 初始更新
         updateContent();
         updateCurrentTime();
+        updateCurrentCountryTime();
 
         // 时间更新：每秒更新时分秒
         setInterval(updateCurrentTime, 1000);
