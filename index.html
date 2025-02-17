@@ -569,6 +569,9 @@
         updateCurrentTime();
 
         const now = new Date();
+        const timeString = `${padZero(now.getHours())}:${padZero(
+          now.getMinutes()
+        )}:${padZero(now.getSeconds())}`;
         const langData = getLangData();
         const country = document.getElementById("countrySelect").value; // Get the selected country
         const countryName = getCountryName(country);
@@ -644,6 +647,9 @@
 
       function getTextContent() {
         const now = new Date();
+        const timeString = `${padZero(now.getHours())}:${padZero(
+          now.getMinutes()
+        )}:${padZero(now.getSeconds())}`;
         const langData = getLangData();
         const country = document.getElementById("countrySelect").value;
         const countryName = getCountryName(country);
@@ -665,12 +671,7 @@
         const timezoneOffsetString = getTimezoneOffsetString();
 
         let text = `${langData.webTitle}
-${langData.currentTimeString(
-  padZero(now.getHours()),
-  padZero(now.getMinutes()),
-  padZero(now.getSeconds()),
-  timezoneOffsetString
-)}
+${langData.currentTimeString(timeString, timezoneOffsetString)}
 ${langData.timeInCountry(countryName, countryTime, countryTimezone)}
 ${langData.yearPassed(daysPassed, hoursPassed)}
 ${langData.todayIs(weekdays)}
