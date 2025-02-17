@@ -394,6 +394,7 @@
           daysToHoliday: "距离",
           still: "还有",
           copyButton: "一键复制摸鱼提醒",
+          weekdays: ["日", "一", "二", "三", "四", "五", "六"],
         },
         "en-US": {
           webTitle: "[Fish-Touching Office] Gentle Reminder",
@@ -413,9 +414,7 @@
           todayIs: (weekdays) =>
             `Today is ${new Date().getFullYear()}/${
               new Date().getMonth() + 1
-            }/${new Date().getDate()}, Weekday ${
-              weekdays[new Date().getDay()]
-            }`,
+            }/${new Date().getDate()}, ${weekdays[new Date().getDay()]}`,
           greeting:
             "Hello, fish-toucher! No matter how busy you are, don't forget to touch fish!",
           workReminder:
@@ -437,6 +436,7 @@
           daysToHoliday: "Days to",
           still: "still",
           copyButton: "Copy Fish-Touching Reminder",
+          weekdays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
         },
       };
 
@@ -444,6 +444,27 @@
       function getLangData() {
         const language = document.getElementById("languageSelect").value;
         return translations[language];
+      }
+
+      // Add this new function after the getLangData() function
+      function updateCountrySelectOptions() {
+        const langData = getLangData();
+        const countrySelect = document.getElementById("countrySelect");
+        const currentValue = countrySelect.value;
+
+        // Clear existing options
+        countrySelect.innerHTML = "";
+
+        // Add new options with translated names
+        Object.entries(langData.countries).forEach(([code, name]) => {
+          const option = document.createElement("option");
+          option.value = code;
+          option.textContent = name;
+          countrySelect.appendChild(option);
+        });
+
+        // Restore the previously selected value
+        countrySelect.value = currentValue;
       }
 
       function padZero(num) {
@@ -544,11 +565,14 @@
       }
 
       function updateContent() {
+        updateCountrySelectOptions();
+        updateCurrentTime();
+
         const now = new Date();
         const langData = getLangData();
         const country = document.getElementById("countrySelect").value; // Get the selected country
         const countryName = getCountryName(country);
-        const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+        const weekdays = langData.weekdays;
         const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
         const daysPassed = Math.floor(
           (now - new Date(now.getFullYear(), 0, 1)) / (24 * 60 * 60 * 1000)
@@ -566,11 +590,11 @@
         document.getElementById("webTitle").textContent = langData.webTitle;
         const content = `
                 <div class="section" id="currentCountryTime" style="text-align: center;">
-                    <p>${langData.timeInCountry(
+                    ${langData.timeInCountry(
                       countryName,
                       countryTime,
                       countryTimezone
-                    )}</p>
+                    )}
                 </div>
 
                 <div class="section" style="text-align: center;">
@@ -623,7 +647,7 @@
         const langData = getLangData();
         const country = document.getElementById("countrySelect").value;
         const countryName = getCountryName(country);
-        const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+        const weekdays = langData.weekdays;
         const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
         const daysPassed = Math.floor(
           (now - new Date(now.getFullYear(), 0, 1)) / (24 * 60 * 60 * 1000)
@@ -696,6 +720,7 @@ ${langData.holidays(countryName)}\n`;
 
       // 时间更新：每秒更新时分秒
       setInterval(updateCurrentTime, 1000);
+      setInterval(updateCurrentCountryTime, 1000);
 
       // 内容更新：每分钟更新一次
       setInterval(updateContent, 60000);
