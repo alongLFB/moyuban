@@ -692,7 +692,7 @@ ${langData.holidays(countryName)}\n`;
 
         holidaysByCountry[country].forEach((holiday) => {
           const { days, hours } = getDaysToHoliday(holiday.month, holiday.day);
-          text += `Distance to 【${holiday.name}】: ${days} days ${hours} hours. ${holiday.description}\n`;
+          text += `${langData.daysToHoliday} ${holiday.name} ${langData.still} : ${days} ${langData.days} ${hours} ${langData.hours}. ${holiday.description}\n`;
         });
 
         return text;
