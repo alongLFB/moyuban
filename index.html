@@ -329,6 +329,50 @@
     </div>
 
     <script>
+      // 在脚本开始处添加URL参数处理函数
+      function getUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return {
+          country: urlParams.get("country"),
+          language: urlParams.get("language"),
+        };
+      }
+
+      function updateUrl() {
+        const country = document.getElementById("countrySelect").value;
+        const language = document.getElementById("languageSelect").value;
+        const url = new URL(window.location);
+        url.searchParams.set("country", country);
+        url.searchParams.set("language", language);
+        window.history.replaceState({}, "", url);
+      }
+
+      function initializeFromUrl() {
+        const params = getUrlParams();
+
+        if (params.country) {
+          const countrySelect = document.getElementById("countrySelect");
+          if (
+            [...countrySelect.options].some(
+              (option) => option.value === params.country
+            )
+          ) {
+            countrySelect.value = params.country;
+          }
+        }
+
+        if (params.language) {
+          const languageSelect = document.getElementById("languageSelect");
+          if (
+            [...languageSelect.options].some(
+              (option) => option.value === params.language
+            )
+          ) {
+            languageSelect.value = params.language;
+          }
+        }
+      }
+
       // 各国节假日数据
       const holidaysByCountry = {
         CN: [
@@ -894,6 +938,9 @@
 
         document.getElementById("mainContent").innerHTML = content;
         document.getElementById("copyButton").textContent = langData.copyButton;
+
+        // 更新URL参数
+        updateUrl();
       }
 
       function getTextContent() {
@@ -991,6 +1038,8 @@ ${langData.daysToSaturday}${daysToSaturday}${langData.days}
       }
 
       // 初始更新
+      // 初始化：先从URL读取参数，再更新内容
+      initializeFromUrl();
       updateContent();
       updateCurrentTime();
       updateCurrentCountryTime();
@@ -1001,6 +1050,12 @@ ${langData.daysToSaturday}${daysToSaturday}${langData.days}
 
       // 内容更新：每分钟更新一次
       setInterval(updateContent, 60000);
+
+      // 添加浏览器前进/后退按钮支持
+      window.addEventListener("popstate", function (event) {
+        initializeFromUrl();
+        updateContent();
+      });
     </script>
   </body>
 </html>
