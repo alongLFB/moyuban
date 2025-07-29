@@ -718,15 +718,9 @@
       }
 
       function updateCurrentCountryTime() {
-        const country = document.getElementById("countrySelect").value;
-        const countryTimezone = getTimezoneForCountry(country);
-        const countryTime = new Date().toLocaleString("en-US", {
-          timeZone: countryTimezone,
-        });
-        const countryName = getCountryName(country);
-        const langData = getLangData();
-        document.getElementById("currentCountryTime").textContent =
-          langData.timeInCountry(countryName, countryTime, countryTimezone);
+        // 这个函数现在不需要了，因为国家时间已经集成到 updateContent 中
+        // 可以直接删除这个函数，或者保留但不执行任何操作
+        return;
       }
 
       function getTimezoneOffsetString() {
@@ -1057,12 +1051,12 @@ ${langData.daysToSaturday}${daysToSaturday}${langData.days}
       initializeFromUrl();
       updateContent();
       updateCurrentTime();
-      updateCurrentCountryTime();
+      // updateCurrentCountryTime(); // 删除这行
       isInitializing = false; // 初始化完成
 
       // 时间更新：每秒更新时分秒
       setInterval(updateCurrentTime, 1000);
-      setInterval(updateCurrentCountryTime, 1000);
+      // setInterval(updateCurrentCountryTime, 1000); // 删除这行
 
       // 内容更新：每分钟更新一次
       setInterval(updateContent, 60000);
