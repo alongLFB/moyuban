@@ -338,13 +338,19 @@
         };
       }
 
+      let isInitializing = false; // 添加标志变量
+      let isPopstateEvent = false; // 添加popstate事件标志
+
       function updateUrl() {
-        const country = document.getElementById("countrySelect").value;
-        const language = document.getElementById("languageSelect").value;
-        const url = new URL(window.location);
-        url.searchParams.set("country", country);
-        url.searchParams.set("language", language);
-        window.history.replaceState({}, "", url);
+        // 只有在非初始化和非popstate事件时才创建新的历史记录
+        if (!isInitializing && !isPopstateEvent) {
+          const country = document.getElementById("countrySelect").value;
+          const language = document.getElementById("languageSelect").value;
+          const url = new URL(window.location);
+          url.searchParams.set("country", country);
+          url.searchParams.set("language", language);
+          window.history.pushState({ country, language }, "", url);
+        }
       }
 
       function initializeFromUrl() {
@@ -1037,12 +1043,22 @@ ${langData.daysToSaturday}${daysToSaturday}${langData.days}
         }
       }
 
-      // 初始更新
-      // 初始化：先从URL读取参数，再更新内容
+      // 修改浏览器前进/后退按钮支持
+      window.addEventListener("popstate", function (event) {
+        console.log("popstate triggered", event.state); // 调试用
+        isPopstateEvent = true; // 设置popstate标志
+        initializeFromUrl();
+        updateContent();
+        isPopstateEvent = false; // 重置标志
+      });
+
+      // 修改初始化部分
+      isInitializing = true; // 开始初始化
       initializeFromUrl();
       updateContent();
       updateCurrentTime();
       updateCurrentCountryTime();
+      isInitializing = false; // 初始化完成
 
       // 时间更新：每秒更新时分秒
       setInterval(updateCurrentTime, 1000);
@@ -1050,12 +1066,6 @@ ${langData.daysToSaturday}${daysToSaturday}${langData.days}
 
       // 内容更新：每分钟更新一次
       setInterval(updateContent, 60000);
-
-      // 添加浏览器前进/后退按钮支持
-      window.addEventListener("popstate", function (event) {
-        initializeFromUrl();
-        updateContent();
-      });
     </script>
   </body>
 </html>
