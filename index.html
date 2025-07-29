@@ -5,106 +5,278 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>摸鱼办公室</title>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap");
+
       body {
-        font-family: Arial, sans-serif;
-        max-width: 800px;
+        font-family: "Noto Serif SC", "SimSun", serif;
+        max-width: 900px;
         margin: 20px auto;
         padding: 20px;
-        background-color: #f5f5f5;
+        background-color: #f4f1e8;
+        background-image: radial-gradient(
+            circle at 20% 80%,
+            rgba(120, 119, 198, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(255, 119, 198, 0.1) 0%,
+            transparent 50%
+          );
       }
 
       .container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #f8f5e8 0%, #ede8d6 100%);
+        border: 4px solid #d4af37;
+        border-radius: 0;
+        box-shadow: 0 0 0 2px #8b4513, 0 8px 25px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
         position: relative;
+        padding: 30px;
+        margin: 20px 0;
+      }
+
+      .container::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        border: 2px solid #cd853f;
+        pointer-events: none;
       }
 
       .country-selector {
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 15px;
+        right: 15px;
         z-index: 100;
+        display: flex;
+        gap: 10px;
       }
 
-      .country-select {
-        padding: 8px;
-        font-size: 14px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-        background-color: white;
-        cursor: pointer;
-      }
-
-      .language-selector {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        z-index: 100;
-      }
-
+      .country-select,
       .language-select {
-        padding: 8px;
-        font-size: 14px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-        background-color: white;
+        padding: 6px 10px;
+        font-size: 12px;
+        border: 2px solid #8b4513;
+        background: linear-gradient(135deg, #f8f5e8 0%, #ede8d6 100%);
+        color: #8b4513;
         cursor: pointer;
+        font-family: "Noto Sans SC", sans-serif;
+        font-weight: 700;
       }
 
-      h1 {
-        color: #333;
+      .header-section {
         text-align: center;
-        margin-right: 100px;
+        border-bottom: 3px double #8b4513;
+        padding-bottom: 20px;
+        margin-bottom: 25px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          #d4af37 20%,
+          #d4af37 80%,
+          transparent 100%
+        );
+        background-size: 100% 2px;
+        background-repeat: no-repeat;
+        background-position: center bottom;
+      }
+
+      .date-banner {
+        background: #8b4513;
+        color: #f8f5e8;
+        padding: 8px 15px;
+        display: inline-block;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        border-radius: 0;
+        font-family: "Noto Sans SC", sans-serif;
+      }
+
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #8b4513;
+        margin: 15px 0;
+        text-shadow: 2px 2px 0px #d4af37;
+        letter-spacing: 3px;
+        font-family: "Noto Serif SC", serif;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        color: #8b4513;
+        font-style: italic;
+        margin-bottom: 15px;
       }
 
       .section {
-        margin: 15px 0;
-        padding: 10px;
-        background-color: #f8f9fa;
-        border-radius: 5px;
+        margin: 20px 0;
+        padding: 15px;
+        border: 2px solid #cd853f;
+        background: rgba(255, 255, 255, 0.3);
+        position: relative;
+      }
+
+      .section::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border: 1px solid #d4af37;
+        pointer-events: none;
+      }
+
+      .section-title {
+        background: #8b4513;
+        color: #f8f5e8;
+        padding: 8px 15px;
+        margin: -15px -15px 15px -15px;
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+        font-family: "Noto Sans SC", sans-serif;
       }
 
       .current-time {
         text-align: center;
-        font-size: 1.5em;
+        font-size: 24px;
         font-weight: bold;
-        color: #2c3e50;
-        margin: 10px 0;
-        padding: 10px;
-        background-color: #ecf0f1;
-        border-radius: 5px;
+        color: #8b4513;
+        margin: 15px 0;
+        padding: 15px;
+        background: radial-gradient(
+          circle,
+          rgba(212, 175, 55, 0.2) 0%,
+          transparent 70%
+        );
+        border: 2px dashed #d4af37;
+        font-family: "Noto Sans SC", sans-serif;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .column {
+        padding: 15px;
+        border: 2px solid #cd853f;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .holiday-item {
+        border-bottom: 1px dotted #8b4513;
+        padding: 8px 0;
+        margin-bottom: 8px;
+      }
+
+      .holiday-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      .holiday-name {
+        font-weight: bold;
+        color: #8b4513;
+        font-size: 16px;
+      }
+
+      .holiday-days {
+        color: #d4af37;
+        font-weight: bold;
+        font-size: 18px;
       }
 
       .copy-button {
         display: block;
-        width: 200px;
-        margin: 20px auto;
-        padding: 10px 20px;
-        font-size: 16px;
-        color: white;
-        background-color: #2ecc71;
-        border: none;
-        border-radius: 5px;
+        width: 250px;
+        margin: 30px auto;
+        padding: 15px 25px;
+        font-size: 18px;
+        color: #f8f5e8;
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+        border: 3px solid #d4af37;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: all 0.3s;
+        font-family: "Noto Sans SC", sans-serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
       }
 
       .copy-button:hover {
-        background-color: #27ae60;
-      }
-
-      .copy-button:active {
-        transform: scale(0.98);
+        background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(139, 69, 19, 0.4);
       }
 
       .copy-feedback {
         display: none;
         text-align: center;
-        color: #27ae60;
-        margin-top: 10px;
+        color: #8b4513;
+        margin-top: 15px;
         font-weight: bold;
+        font-size: 16px;
+        padding: 10px;
+        background: rgba(212, 175, 55, 0.2);
+        border: 2px solid #d4af37;
+      }
+
+      .decorative-border {
+        height: 3px;
+        background: repeating-linear-gradient(
+          90deg,
+          #8b4513 0px,
+          #8b4513 10px,
+          #d4af37 10px,
+          #d4af37 20px
+        );
+        margin: 20px 0;
+      }
+
+      .fish-emoji {
+        font-size: 24px;
+        display: inline-block;
+        animation: swim 3s ease-in-out infinite;
+      }
+
+      @keyframes swim {
+        0%,
+        100% {
+          transform: translateX(0) rotate(0deg);
+        }
+        50% {
+          transform: translateX(10px) rotate(5deg);
+        }
+      }
+
+      p {
+        line-height: 1.6;
+        color: #2c1810;
+        margin: 10px 0;
+      }
+
+      .greeting-text {
+        font-size: 18px;
+        font-weight: bold;
+        color: #8b4513;
+        text-align: center;
+        margin: 15px 0;
+      }
+
+      .reminder-text {
+        font-style: italic;
+        color: #5d4037;
+        line-height: 1.8;
       }
     </style>
   </head>
@@ -131,10 +303,23 @@
         <option value="en-US">English</option>
       </select>
     </div>
+
     <div class="container">
-      <h2 id="webTitle" style="text-align: center"></h2>
+      <div class="header-section">
+        <div class="date-banner" id="dateInfo"></div>
+        <h1 class="title" id="webTitle"></h1>
+        <div class="subtitle">
+          今天你摸鱼了吗？ <span class="fish-emoji">🐠</span>
+        </div>
+        <div class="decorative-border"></div>
+      </div>
+
       <div class="current-time" id="currentTime"></div>
+
       <div id="mainContent"></div>
+
+      <div class="decorative-border"></div>
+
       <button
         id="copyButton"
         class="copy-button"
@@ -528,16 +713,52 @@
         const langData = getLangData();
         const countryName = getCountryName(country);
 
-        let holidayHtml = `<h3 style="text-align: center;">${langData.holidays(
+        let holidayHtml = `<div class="section-title">🎉 ${langData.holidays(
           countryName
-        )}</h3>`;
+        )}</div>`;
 
-        holidays.forEach((holiday) => {
-          const { days, hours } = getDaysToHoliday(holiday.month, holiday.day);
-          holidayHtml += `
-                    <p>${langData.daysToHoliday} ${holiday.name} ${langData.still} : ${days} ${langData.days} ${hours} ${langData.hours}. ${holiday.description}</p>
-                `;
+        // 过滤出当前日期之后的节假日
+        const now = new Date();
+        // 设置为今天的开始时间，便于准确比较
+        const today = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate()
+        );
+
+        const upcomingHolidays = holidays.filter((holiday) => {
+          let targetDate = new Date(
+            now.getFullYear(),
+            holiday.month - 1,
+            holiday.day
+          );
+          // 如果今年的节假日已经过去，则不显示，也不显示明年的
+          return targetDate > today;
         });
+
+        if (upcomingHolidays.length === 0) {
+          holidayHtml += `
+                    <div class="holiday-item">
+                        <div style="text-align: center; color: #666; font-style: italic;">
+                            暂无即将到来的节假日
+                        </div>
+                    </div>
+                `;
+        } else {
+          upcomingHolidays.forEach((holiday) => {
+            const { days, hours } = getDaysToHoliday(
+              holiday.month,
+              holiday.day
+            );
+            holidayHtml += `
+                      <div class="holiday-item">
+                          <div class="holiday-name">${holiday.name}</div>
+                          <div>${langData.daysToHoliday} <span class="holiday-days">${days}</span> ${langData.days} <span class="holiday-days">${hours}</span> ${langData.hours}</div>
+                          <div style="font-size: 12px; color: #666; font-style: italic;">${holiday.description}</div>
+                      </div>
+                  `;
+          });
+        }
 
         return holidayHtml;
       }
@@ -573,7 +794,7 @@
           now.getMinutes()
         )}:${padZero(now.getSeconds())}`;
         const langData = getLangData();
-        const country = document.getElementById("countrySelect").value; // Get the selected country
+        const country = document.getElementById("countrySelect").value;
         const countryName = getCountryName(country);
         const weekdays = langData.weekdays;
         const daysToSaturday = (6 - now.getDay() + 7) % 7 || 7;
@@ -590,58 +811,88 @@
           timeZone: countryTimezone,
         });
 
+        // Update date banner
+        document.getElementById(
+          "dateInfo"
+        ).textContent = `${now.getFullYear()}年${
+          now.getMonth() + 1
+        }月${now.getDate()}日 星期${weekdays[now.getDay()]}`;
+
         document.getElementById("webTitle").textContent = langData.webTitle;
+
         const content = `
-                <div class="section" id="currentCountryTime" style="text-align: center;">
-                    ${langData.timeInCountry(
-                      countryName,
-                      countryTime,
-                      countryTimezone
-                    )}
+                <div class="section">
+                    <div class="section-title">🌍 全球时间</div>
+                    <div style="text-align: center; font-size: 18px; color: #8b4513;">
+                        ${langData.timeInCountry(
+                          countryName,
+                          countryTime,
+                          countryTimezone
+                        )}
+                    </div>
                 </div>
 
-                <div class="section" style="text-align: center;">
-                    ${langData.yearPassed(daysPassed, hoursPassed)}
-                    ${langData.todayIs(weekdays)}
+                <div class="section">
+                    <div class="section-title">📅 时光流逝</div>
+                    <div style="text-align: center; font-size: 16px; line-height: 1.8;">
+                        ${langData.yearPassed(daysPassed, hoursPassed)}<br>
+                        ${langData.todayIs(weekdays)}
+                    </div>
                 </div>
                 
                 <div class="section">
-                    ${langData.greeting}
-                    ${langData.workReminder}
+                    <div class="section-title">🐠 摸鱼宣言</div>
+                    <div class="greeting-text">${langData.greeting}</div>
+                    <div class="reminder-text">${langData.workReminder}</div>
                 </div>
 
-                <div class="section" style="text-align: center;">
-                    <h3 style="text-align: center;">${langData.salary}</h3>
-                    <p>${langData.daysToPayday}：${getDaysToDate(30)} ${
+                <div class="two-column">
+                    <div class="column">
+                        <div class="section-title">💰 发薪倒计时</div>
+                        <p><strong>${
+                          langData.daysToPayday
+                        }</strong> <span class="holiday-days">${getDaysToDate(
+          30
+        )}</span> ${langData.days}</p>
+                        <p><strong>${
+                          langData.daysToPayday5
+                        }</strong> <span class="holiday-days">${getDaysToDate(
+          5
+        )}</span> ${langData.days}</p>
+                        <p><strong>${
+                          langData.daysToPayday10
+                        }</strong> <span class="holiday-days">${getDaysToDate(
+          10
+        )}</span> ${langData.days}</p>
+                        <p><strong>${
+                          langData.daysToPayday15
+                        }</strong> <span class="holiday-days">${getDaysToDate(
+          15
+        )}</span> ${langData.days}</p>
+                        <p><strong>${
+                          langData.daysToPayday20
+                        }</strong> <span class="holiday-days">${getDaysToDate(
+          20
+        )}</span> ${langData.days}</p>
+                        <p><strong>${
+                          langData.daysToPayday25
+                        }</strong> <span class="holiday-days">${getDaysToDate(
+          25
+        )}</span> ${langData.days}</p>
+                        <p><strong>${
+                          langData.daysToSaturday
+                        }</strong> <span class="holiday-days">${daysToSaturday}</span> ${
           langData.days
         }</p>
-                    <p>${langData.daysToPayday5}${getDaysToDate(5)} ${
-          langData.days
-        }</p>
-                    <p>${langData.daysToPayday10}${getDaysToDate(10)} ${
-          langData.days
-        }</p>
-                    <p>${langData.daysToPayday15}${getDaysToDate(15)} ${
-          langData.days
-        }</p>
-                    <p>${langData.daysToPayday20}${getDaysToDate(20)} ${
-          langData.days
-        }</p>
-                    <p>${langData.daysToPayday25}${getDaysToDate(25)} ${
-          langData.days
-        }</p>
-                    <p>${langData.daysToSaturday}${daysToSaturday} ${
-          langData.days
-        }</p>
-                </div>
-
-                <div class="section">
-                    ${getHolidaySection()}
+                    </div>
+                    
+                    <div class="column">
+                        ${getHolidaySection()}
+                    </div>
                 </div>
             `;
 
         document.getElementById("mainContent").innerHTML = content;
-
         document.getElementById("copyButton").textContent = langData.copyButton;
       }
 
@@ -688,12 +939,37 @@ ${langData.daysToPayday20}：${getDaysToDate(20)}${langData.days}
 ${langData.daysToPayday25}：${getDaysToDate(25)}${langData.days}
 ${langData.daysToSaturday}${daysToSaturday}${langData.days}
 
-${langData.holidays(countryName)}\n`;
+        ${langData.holidays(countryName)}\n`;
 
-        holidaysByCountry[country].forEach((holiday) => {
-          const { days, hours } = getDaysToHoliday(holiday.month, holiday.day);
-          text += `${langData.daysToHoliday} ${holiday.name} ${langData.still} : ${days} ${langData.days} ${hours} ${langData.hours}. ${holiday.description}\n`;
-        });
+        // 过滤出当前日期之后的节假日
+        const today = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate()
+        );
+        const upcomingHolidays = holidaysByCountry[country].filter(
+          (holiday) => {
+            let targetDate = new Date(
+              now.getFullYear(),
+              holiday.month - 1,
+              holiday.day
+            );
+            // 如果今年的节假日已经过去，则不显示，也不显示明年的
+            return targetDate > today;
+          }
+        );
+
+        if (upcomingHolidays.length === 0) {
+          text += "暂无即将到来的节假日\n";
+        } else {
+          upcomingHolidays.forEach((holiday) => {
+            const { days, hours } = getDaysToHoliday(
+              holiday.month,
+              holiday.day
+            );
+            text += `${langData.daysToHoliday} ${holiday.name} ${langData.still} : ${days} ${langData.days} ${hours} ${langData.hours}. ${holiday.description}\n`;
+          });
+        }
 
         return text;
       }
