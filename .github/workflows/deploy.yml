@@ -21,13 +21,16 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}   # 服务器私钥
           port: ${{ secrets.SERVER_PORT || 22 }}
           script: |
-            if [ ! -d "/var/www/moyuban" ]; then
+            git config --global --add safe.directory /var/www/moyuban || true
+
+            if [ ! -d "/var/www/moyuban/.git" ]; then
               sudo mkdir -p /var/www/moyuban
               sudo chown -R $(whoami) /var/www/moyuban
               git clone https://github.com/alongLFB/moyuban.git /var/www/moyuban
             fi
 
             cd /var/www/moyuban
+            sudo chown -R $(whoami) /var/www/moyuban
             git fetch origin master
             git reset --hard origin/master
             sudo chmod -R a+rX /var/www/moyuban
